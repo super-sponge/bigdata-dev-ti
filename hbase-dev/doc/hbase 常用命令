@@ -1,0 +1,105 @@
+
+DDL 命令
+1. 查询状态
+status
+2. 查询版本
+version
+3. 建表
+create 'stg:member','member_id','address','info'
+4. 查看系统中的表
+list
+5. 查看表的详细结构
+describe 'stg:member'
+6. 删除一个列族，alter，disable，enable
+alter 'stg:member',{NAME=>'member_id',METHOD=>'delete'}
+desc 'stg:member'
+
+disable 'stg:member'
+alter 'stg:member',{NAME=>'member_id',METHOD=>'delete'}
+enable 'stg:member'
+7. 更改列簇属性
+alter 'stg:member',{NAME=>'member_id',VERSIONS=>3}
+alter 'stg:member',{NAME=>'info',VERSIONS=>3}
+
+8. 删除一张表
+disable 'stg:member'
+drop 'stg:member'
+
+9. 查询表是否存在
+exists 'stg:member'
+
+10. 判断表enable, disable
+is_enabled 'member'
+is_disabled 'member'
+
+DML 命令
+
+1.插入几条记录
+put'stg:member','scutshuxue','info:age','24'
+put'stg:member','scutshuxue','info:birthday','1987-06-17'
+put'stg:member','scutshuxue','info:company','alibaba'
+put'stg:member','scutshuxue','address:contry','china'
+put'stg:member','scutshuxue','address:province','zhejiang'
+put'stg:member','scutshuxue','address:city','hangzhou'
+
+
+put'stg:member','xiaofeng','info:birthday','1987-4-17'
+put'stg:member','xiaofeng','info:favorite','movie'
+put'stg:member','xiaofeng','info:company','alibaba'
+put'stg:member','xiaofeng','address:contry','china'
+put'stg:member','xiaofeng','address:province','guangdong'
+put'stg:member','xiaofeng','address:city','jieyang'
+put'stg:member','xiaofeng','address:town','xianqiao'
+
+put'stg:member','temp','info:age','24'
+
+
+2.获取一条数据
+获取一个id的所有数据
+get 'stg:member','scutshuxue'
+获取一个id，一个列族的所有数据
+get 'stg:member','scutshuxue','info'
+
+获取一个id，一个列族中一个列的所有数据
+get 'stg:member','scutshuxue','info:age'
+
+3.更新一条记录
+将scutshuxue的年龄改成99
+put 'stg:member','scutshuxue','info:age' ,'99'
+get 'stg:member','scutshuxue','info:age'
+
+
+3.通过timestamp来获取两个版本的数据(如果查询不出数据,请查看表的描述信息，并更改版本信息)
+
+get 'stg:member','scutshuxue',{COLUMN=>'info:age',VERSIONS=>3}
+get 'stg:member','scutshuxue',{COLUMN=>'info:age',TIMESTAMP=>1488350586512}
+get 'stg:member','scutshuxue',{COLUMN=>'info:age',TIMESTAMP=>1488350437887}
+4.全表扫描：
+scan 'stg:member'
+
+5.删除id为temp的值的'info:age'字段(必须指定列名)
+get 'stg:member','temp'
+delete 'stg:member','temp','info:age'
+get 'stg:member','temp'
+
+
+6.删除整行
+get 'stg:member','xiaofeng'
+deleteall 'stg:member','xiaofeng'
+
+
+7.查询表中有多少行：
+count 'stg:member'
+
+8.给'xiaofeng'这个id增加'info:age'字段，并使用counter实现递增
+incr 'stg:member','xiaofeng','info:age'
+get 'stg:member','xiaofeng','info:age'
+
+incr 'stg:member','xiaofeng','info:age'
+get 'stg:member','xiaofeng','info:age'
+
+获取当前count的值
+get_counter 'stg:member','xiaofeng','info:age'
+
+9.将整张表清空：
+truncate 'stg:member'
