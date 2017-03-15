@@ -1,5 +1,3 @@
-package com.asia.utls
-
 import org.apache.spark.{SparkConf, SparkContext}
 
 /**

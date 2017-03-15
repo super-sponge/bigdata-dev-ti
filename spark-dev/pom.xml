@@ -23,6 +23,7 @@
         <avro.version>1.7.6</avro.version>
         <codahale.metrics.version>3.0.0</codahale.metrics.version>
         <codehaus.jackson.version>1.8.8</codehaus.jackson.version>
+        <maven.assembly.version>2.5.2</maven.assembly.version>
 
 
         <PermGen>64m</PermGen>
@@ -36,7 +37,7 @@
         <repository>
             <id>maven-public</id>
             <name>maven-public</name>
-	    <url>http://10.40.21.105:8081/repository/maven-public/</url>
+            <url>http://10.40.21.105:8081/repository/maven-public/</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
@@ -87,6 +88,12 @@
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-streaming-flume-sink_${scala.binary.version}</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-streaming-kafka_${scala.binary.version}</artifactId>
             <version>${spark.version}</version>
         </dependency>
 
@@ -196,6 +203,24 @@
                             <overWriteSnapshots>false</overWriteSnapshots>
                             <overWriteIfNewer>true</overWriteIfNewer>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>${maven.assembly.version}</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/main/assembly/package.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
